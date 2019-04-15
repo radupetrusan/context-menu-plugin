@@ -1,11 +1,11 @@
-Rete context menu plugin
+Rete options menu plugin
 ====
 #### Rete.js plugin
 
 ```js
-import ContextMenuPlugin, { Menu, Item, Search } from 'rete-context-menu-plugin';
+import OptionsMenuPlugin, { Menu, Item, Search } from 'rete-options-menu-plugin';
 
-editor.use(ContextMenuPlugin, {
+editor.use(OptionsMenuPlugin, {
     searchBar: false, // true by default
     searchKeep: title => true, // leave item when searching, optional. For example, title => ['Refresh'].includes(title)
     delay: 100,
@@ -15,9 +15,7 @@ editor.use(ContextMenuPlugin, {
     rename(component) {
         return component.name;
     },
-    items: {
-        'Click me'(){ console.log('Works!') }
-    },
+    items: [],
     vueComponent: CustomVueComponent // extends Menu
 });
 ```
@@ -51,9 +49,9 @@ To change the items that create nodes, you may need to change the name.
 class MyComponent {
     constructor() {
         super("My comp");
-        this.contextMenuName = "Add My comp";
+        this.optionsMenuName = "Add My comp";
     }
 }
 ///
-rename(component) { return component.contextMenuName || component.name }
+rename(component) { return component.optionsMenuName || component.name }
 ```

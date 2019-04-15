@@ -4,7 +4,7 @@ import vue from 'rollup-plugin-vue';
 
 export default {
     input: 'src/index.js',
-    name: 'ContextMenuPlugin',
+    name: 'OptionsMenuPlugin',
     globals: {
         'vue': 'Vue',
         'lodash': '_'

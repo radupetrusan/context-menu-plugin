@@ -4,37 +4,55 @@ import VueItem from './menu/Item.vue';
 import VueMenu from './menu/Menu.vue';
 import VueSearch from './menu/Search.vue';
 
-function install(editor, { 
+function install(editor, {
     searchBar = true,
     searchKeep = () => false,
     delay = 1000,
-    items = {},
+    items = [],
     allocate = () => [],
     rename = component => component.name,
     vueComponent = null
 }) {
-    editor.bind('hidecontextmenu');
+    if (!editor.exist('hidecontextmenu')) {
+        editor.bind('hidecontextmenu');
+    }
 
-    const mainMenu = new MainMenu(editor, { searchBar, searchKeep, delay }, vueComponent, { items, allocate, rename });
-    const nodeMenu = new NodeMenu(editor, { searchBar: false, delay }, vueComponent);
+    const mainMenu = new MainMenu(editor, {
+        searchBar,
+        searchKeep,
+        delay
+    }, vueComponent, {
+        items,
+        allocate,
+        rename
+    });
+    const nodeMenu = new NodeMenu(editor, {
+        searchBar: false,
+        delay
+    }, vueComponent);
 
     editor.on('hidecontextmenu', () => {
         mainMenu.hide();
         nodeMenu.hide();
     });
 
-    editor.on('click contextmenu', () => {
+    editor.on('click optionsmenu', () => {
         editor.trigger('hidecontextmenu');
     });
 
-    editor.on('contextmenu', ({ e, node }) => {
+    editor.on('optionsmenu', ({
+        e,
+        node
+    }) => {
         e.preventDefault();
         e.stopPropagation();
 
         const [x, y] = [e.clientX, e.clientY];
         const menu = node ? nodeMenu : mainMenu;
 
-        menu.show(x, y, { node });
+        menu.show(x, y, {
+            node
+        });
     });
 }
 
@@ -43,6 +61,6 @@ export const Item = VueItem;
 export const Search = VueSearch;
 
 export default {
-    name: 'context-menu',
+    name: 'options-menu',
     install
 }

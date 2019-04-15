@@ -1,5 +1,5 @@
-import { createNode, traverse } from './utils';
 import Menu from './menu/index';
+import { createNode } from './utils';
 
 export default class MainMenu extends Menu {
     constructor(editor, props, vueComponent, { items, allocate, rename }) {
@@ -22,6 +22,9 @@ export default class MainMenu extends Menu {
                 path);
         });
     
-        traverse(items, (name, func, path) => this.addItem(name, func, path))
+        // traverse(items, (name, func, path) => this.addItem(name, func, path))
+        items.forEach(item => {
+            this.addItem(item.name, item.subtitle, item.function, []);
+        });
     }
 }

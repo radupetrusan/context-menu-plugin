@@ -1,11 +1,11 @@
 <template lang="pug">
-.context-menu(
+.options-menu(
   ref="menu"
   v-if="visible"
   v-bind:style="style",
   @mouseleave='timeoutHide()',
   @mouseover="cancelHide()"
-  @contextmenu.prevent=""
+  @optionsmenu.prevent=""
 )
   Search(v-if="searchBar", v-model="filter", @search="onSearch")
   Item(v-for='item in filtered'
@@ -69,7 +69,7 @@ export default {
     },
     show(x, y, args = {}) {
       this.visible = true;
-      this.x = x;
+      this.x = x + 50;
       this.y = y;
       this.args = args;
   
@@ -78,20 +78,20 @@ export default {
     hide() {
       this.visible = false;
     },
-    additem(title, onClick, path = []) {
+    additem(title, subtitle, onClick, path = []) {
       let items = this.items;
       for(let level of path) {
         let exist = items.find(i => i.title === level);
 
         if(!exist) {
-          exist = { title: level, subitems: [] };
+          exist = { title: level, subtitle: subtitle, subitems: [] };
           items.push(exist)
         }
 
         items = exist.subitems || (exist.subitems = []);
       }
 
-      items.push({ title, onClick });
+      items.push({ title, subtitle, onClick });
     },
   },
   updated() {
@@ -116,14 +116,14 @@ export default {
 @import '../vars.sass'
 @import '../common.sass'
 
-.context-menu
+.options-menu
   left: 0
   top: 0
   position: fixed
   padding: 10px
   width: $width
   margin-top: -20px
-  margin-left: -$width/2
+  // margin-left: -$width/2
   .search
     @extend .item
 </style>

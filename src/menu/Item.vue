@@ -4,7 +4,7 @@
   @mouseover="showSubitems()"
   @mouseleave="timeoutHide()"
   :class="{ hasSubitems }"
-) {{item.title}}
+) {{item.title}} - {{item.subtitle}}
   .subitems(v-show="hasSubitems && this.visibleSubitems")
     Item(v-for="subitem in item.subitems"
       :key="subitem.title"
