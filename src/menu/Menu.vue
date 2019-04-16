@@ -5,7 +5,7 @@
   v-bind:style="style",
   @mouseleave='timeoutHide()',
   @mouseover="cancelHide()"
-  @optionsmenu.prevent=""
+  @contextmenu.prevent=""
 )
   Search(v-if="searchBar", v-model="filter", @search="onSearch")
   Item(v-for='item in filtered'

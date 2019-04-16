@@ -36,11 +36,11 @@ function install(editor, {
         nodeMenu.hide();
     });
 
-    editor.on('click optionsmenu', () => {
+    editor.on('click contextmenu', () => {
         editor.trigger('hidecontextmenu');
     });
 
-    editor.on('optionsmenu', ({
+    editor.on('contextmenu', ({
         e,
         node
     }) => {
