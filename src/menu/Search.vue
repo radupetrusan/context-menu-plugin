@@ -3,17 +3,17 @@
   input(v-model="value")
 </template>
 
-<script>
-export default {
+<script lang="ts">
+import Vue from 'vue'
+export default Vue.extend({
   props: ['value', 'search'],
   watch: {
     value() {
       this.$emit('search', this.value);
     }
   }
-}
+})
 </script>
-
 
 <style lang="sass" scoped>
 .search

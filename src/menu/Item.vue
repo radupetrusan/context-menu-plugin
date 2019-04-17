@@ -3,53 +3,44 @@
   @click="onClick($event)"
   @mouseover="showSubitems()"
   @mouseleave="timeoutHide()"
-  :class="{ hasSubitems }"
 ) {{item.title}} - {{item.subtitle}}
-  .subitems(v-show="hasSubitems && this.visibleSubitems")
-    Item(v-for="subitem in item.subitems"
-      :key="subitem.title"
-      :item="subitem"
-      :args="args"
-      :delay="delay"
-      )
 </template>
 
-<script>
-import hideMixin from './debounceHide'
+<script lang="ts">
+import Vue from 'vue';
+import hideMixin from "./debounceHide";
+import { OptionItem } from './models/option-item';
 
-export default {
+export default Vue.extend({
   name: 'Item',
   mixins: [hideMixin('hideSubitems')],
-  props: { item: Object, args: Object },
+  props: { item: OptionItem, args: Object },
   data() {
     return {
       visibleSubitems: false, 
     }
   },
   computed: {
-    hasSubitems() {
-      return this.item.subitems
-    }
+    
   },
   methods: {
     showSubitems() {
       this.visibleSubitems = true;
-      this.cancelHide();
+      // this.cancelHide();
     },
     hideSubitems() {
       this.visibleSubitems = false;
     },
-    onClick(e) {
+    onClick(e: any) {
       e.stopPropagation();
       
-      if(this.item.onClick)
-        this.item.onClick(this.args);
+      if(this.item.onclick)
+        this.item.onclick(this.args);
       this.$root.$emit('hide');
     }
   }
-}
+})
 </script>
-
 
 <style lang="sass" scoped>
 @import '../vars.sass'

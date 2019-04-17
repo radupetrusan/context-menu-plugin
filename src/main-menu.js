@@ -15,16 +15,15 @@ export default class MainMenu extends Menu {
         editor.on('componentregister', component => {
             const path = allocate(component);
     
-            if (Array.isArray(path)) // add to the menu if path is array
-                this.addItem(rename(component), async () => {
-                    editor.addNode(await createNode(component, mouse));
-                },
-                path);
+            // if (Array.isArray(path)) // add to the menu if path is array
+            //     this.addItem(rename(component), async () => {
+            //         editor.addNode(await createNode(component, mouse));
+            //     },
+            //     path);
         });
     
-        // traverse(items, (name, func, path) => this.addItem(name, func, path))
         items.forEach(item => {
-            this.addItem(item.name, item.subtitle, item.function, []);
+            this.addItem(item.name, item.subtitle, item.function);
         });
     }
 }

@@ -5,10 +5,9 @@
   v-bind:style="style",
   @mouseleave='timeoutHide()',
   @mouseover="cancelHide()"
-  @contextmenu.prevent=""
+  @optionsmenu.prevent=""
 )
-  Search(v-if="searchBar", v-model="filter", @search="onSearch")
-  Item(v-for='item in filtered'
+  Item(v-for='item in items'
     :key="item.title"
     :item="item"
     :args="args"
@@ -16,101 +15,75 @@
   )
 </template>
 
-<script>
-import hideMixin from './debounceHide'
-import Item from './Item.vue';
-import Search from './Search.vue';
-import { fitViewport } from '../utils';
+<script lang="ts">
+import hideMixin from "./debounceHide";
+import Item from "./Item.vue";
+import { fitViewport } from "../utils";
+import Vue from "vue";
+import { OptionItem } from "./models/option-item";
 
-export default {
+export default Vue.extend({
   props: { searchBar: Boolean, searchKeep: Function },
-  mixins: [hideMixin('hide')],
+  mixins: [hideMixin("hide")],
   data() {
     return {
       x: 0,
       y: 0,
       visible: false,
       args: {},
-      filter: '',
-      items: [],
-    }
+      filter: "",
+      items: [] as OptionItem[]
+    };
   },
   computed: {
-    style() {
+    style(): any {
       return {
-        top: this.y+'px', 
-        left: this.x+'px'
-      }
-    },
-    filtered() {
-      if(!this.filter) return this.items;
-      const regex = new RegExp(this.filter, 'i');
-      
-      return this.extractLeafs(this.items)
-        .filter(({ title }) => {
-          return this.searchKeep(title) || title.match(regex)
-        });
+        top: this.y + "px",
+        left: this.x + "px"
+      };
     }
   },
   methods: {
-    extractLeafs(items) {
-      if(!items) return [];
-      let leafs = [];
-      items.map(item => {
-        if(!item.subitems) leafs.push(item)
-
-        leafs.push(...this.extractLeafs(item.subitems))
-      })
-
-      return leafs;
-    },
-    onSearch(e) {
-      this.filter = e;
-    },
-    show(x, y, args = {}) {
+    show(x: number, y: number, args = {}) {
       this.visible = true;
       this.x = x + 50;
       this.y = y;
       this.args = args;
-  
-      this.cancelHide();
+
+      // this.cancelHide();
     },
     hide() {
       this.visible = false;
     },
-    additem(title, subtitle, onClick, path = []) {
+    additem(title: string, subtitle: string, onClick: Function) {
       let items = this.items;
-      for(let level of path) {
-        let exist = items.find(i => i.title === level);
-
-        if(!exist) {
-          exist = { title: level, subtitle: subtitle, subitems: [] };
-          items.push(exist)
-        }
-
-        items = exist.subitems || (exist.subitems = []);
-      }
-
-      items.push({ title, subtitle, onClick });
+      const item = new OptionItem({
+        title: title,
+        subtitle: subtitle,
+        onclick: onClick
+        });
+      items.push(item);
     },
+    setitems(newItems: OptionItem[]) {
+      this.items = newItems;
+    }
   },
   updated() {
-    if(this.$refs.menu) {
-      [this.x, this.y] = fitViewport([this.x, this.y], this.$refs.menu)
-    } 
+    if (this.$refs.menu) {
+      [this.x, this.y] = fitViewport([this.x, this.y], this.$refs.menu);
+    }
   },
   mounted() {
-    this.$root.$on('show', this.show);
-    this.$root.$on('hide', this.hide);
-    this.$root.$on('additem', this.additem);
+    this.$root.$on("show", this.show);
+    this.$root.$on("hide", this.hide);
+    this.$root.$on("additem", this.additem);
+    this.$root.$on("setitems", this.setitems);
   },
   components: {
-    Item,
-    Search
+    Item
   }
-}
+});
 </script>
-
 
 <style lang="sass" scoped>
 @import '../vars.sass'
@@ -123,7 +96,4 @@ export default {
   padding: 10px
   width: $width
   margin-top: -20px
-  // margin-left: -$width/2
-  .search
-    @extend .item
 </style>

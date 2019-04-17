@@ -3,12 +3,8 @@ import sass from 'rollup-plugin-sass';
 import vue from 'rollup-plugin-vue';
 
 export default {
-    input: 'src/index.js',
+    input: 'src/index.ts',
     name: 'OptionsMenuPlugin',
-    globals: {
-        'vue': 'Vue',
-        'lodash': '_'
-    },
     plugins: [
         pug({
             pugRuntime: false
@@ -17,5 +13,13 @@ export default {
             insert: true
         }),
         vue()
-    ]
+    ],
+    babelPresets: [
+        require('@babel/preset-typescript')
+    ],
+    extensions: ['.js', '.ts', '.vue'],
+    globals: {
+        'vue': 'Vue',
+        'lodash': '_'
+    }
 }

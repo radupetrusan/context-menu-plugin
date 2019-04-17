@@ -1,5 +1,9 @@
 import Menu from './Menu.vue';
+import Item from './Item.vue';
 import Vue from 'vue';
+
+export const VueMenu = Menu;
+export const VueItem = Item;
 
 export default class {
     
@@ -23,5 +27,9 @@ export default class {
 
     hide() {
         this.menu.$emit('hide');
+    }
+
+    setItems(...args) {
+        this.menu.$emit('setitems', ...args);
     }
 }
