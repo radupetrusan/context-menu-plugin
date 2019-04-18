@@ -7,7 +7,6 @@ import './events';
 function install(editor: NodeEditor, {
     searchBar = true,
     searchKeep = () => false,
-    delay = 1000,
     items = [],
     vueComponent = null,
     rename = (component: any) => component.name,
@@ -26,7 +25,6 @@ function install(editor: NodeEditor, {
         {
             searchBar,
             searchKeep,
-            delay
         },
         vueComponent,
         {

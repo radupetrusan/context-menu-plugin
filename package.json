@@ -1,6 +1,6 @@
 {
   "name": "rete-options-menu-plugin",
-  "version": "1.2.3",
+  "version": "1.2.7",
   "description": "",
   "main": "build/options-menu-plugin.common.js",
   "module": "build/options-menu-plugin.esm.js",

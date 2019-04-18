@@ -1,22 +1,20 @@
-<template lang="pug">
-.options-menu(
-  ref="menu"
-  v-if="visible"
-  v-bind:style="style",
-  @mouseleave='timeoutHide()',
-  @mouseover="cancelHide()"
-  @optionsmenu.prevent=""
-)
-  Item(v-for='item in items'
-    :key="item.title"
-    :item="item"
-    :args="args"
-    :delay="delay / 2"
-  )
+<template>
+  <div
+    class="options-menu"
+    v-if="visible"
+    v-bind:style="style"
+    @optionsmenu.prevent="">
+    <Item
+      v-for="item in items"
+      :key="item.title"
+      :item="item"
+      :args="args">
+    </Item>
+  </div>
 </template>
 
+
 <script lang="ts">
-import hideMixin from "./debounceHide";
 import Item from "./Item.vue";
 import { fitViewport } from "../utils";
 import Vue from "vue";
@@ -24,7 +22,6 @@ import { OptionItem } from "./models/option-item";
 
 export default Vue.extend({
   props: { searchBar: Boolean, searchKeep: Function },
-  mixins: [hideMixin("hide")],
   data() {
     return {
       x: 0,
@@ -49,8 +46,6 @@ export default Vue.extend({
       this.x = x + 50;
       this.y = y;
       this.args = args;
-
-      // this.cancelHide();
     },
     hide() {
       this.visible = false;
