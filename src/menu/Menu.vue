@@ -1,15 +1,25 @@
 <template>
   <div
+    id="optionsmenu"
     class="options-menu"
     v-if="visible"
     v-bind:style="style"
-    @optionsmenu.prevent="">
-    <Item
-      v-for="item in items"
-      :key="item.title"
-      :item="item"
-      :args="args">
-    </Item>
+    v-on:wheel="wheel($event)"
+    @optionsmenu.prevent
+  >
+    <div class="menu-title">Choose an option</div>
+    <div class="menu-tabs">
+      <div
+        class="menu-tab"
+        v-for="tab in categories"
+        v-bind:key="tab"
+        v-bind:class="{'active-tab': isActiveTab(tab)}"
+        v-on:click="activeTab = tab"
+      >{{tab}}</div>
+    </div>
+    <div class="menu-items">
+      <Item v-for="item in filtered" :key="item.title" :item="item" :args="args"></Item>
+    </div>
   </div>
 </template>
 
@@ -29,7 +39,9 @@ export default Vue.extend({
       visible: false,
       args: {},
       filter: "",
-      items: [] as OptionItem[]
+      items: [] as OptionItem[],
+      categories: [] as string[],
+      activeTab: ""
     };
   },
   computed: {
@@ -38,6 +50,9 @@ export default Vue.extend({
         top: this.y + "px",
         left: this.x + "px"
       };
+    },
+    filtered(): OptionItem[] {
+      return this.items.filter(i => i.category === this.activeTab);
     }
   },
   methods: {
@@ -56,11 +71,25 @@ export default Vue.extend({
         title: title,
         subtitle: subtitle,
         onclick: onClick
-        });
+      });
       items.push(item);
     },
     setitems(newItems: OptionItem[]) {
-      this.items = newItems;
+      if (!!newItems) {
+        this.items = newItems;
+        this.categories = Array.from(new Set(newItems.map(i => i.category)));
+        if (this.categories.length) {
+          this.activeTab = this.categories[0];
+        }
+      } else {
+        this.items = [];
+      }
+    },
+    isActiveTab(tab: string): boolean {
+      return this.activeTab === tab;
+    },
+    wheel(e: MouseEvent) {
+      e.stopPropagation();
     }
   },
   updated() {
@@ -91,4 +120,18 @@ export default Vue.extend({
   padding: 10px
   width: $width
   margin-top: -20px
+
+  .menu-tabs
+    width: 100%
+    display: flex
+
+    .menu-tab
+      flex-grow: 1
+      flex-basis: 0
+      opacity: 0.6
+      cursor: pointer
+
+      &.active-tab
+        opacity: 1
+        border-bottom: 1px solid white
 </style>
